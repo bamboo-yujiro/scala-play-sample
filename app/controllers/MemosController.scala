@@ -21,10 +21,9 @@ class MemosController @Inject() extends Controller {
    * a path of `/`.
    */
   //def index(folderId: Long, q: Option[String], done: Option[Boolean], sort: Option[String], p: Int, s: Int) = Action.async {
-  def index() = Action.async {
-    Memos.content_s().title_s().per(3).page(1).get().map {
-      memos => Ok(views.html.memos.index(memos))
-    }
+  def index() = Action {
+    val memos: List[Memo] = Memo.findAll()
+    Ok(views.html.memos.index(memos))
   }
 
 }
