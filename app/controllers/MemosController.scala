@@ -22,7 +22,7 @@ class MemosController @Inject() extends Controller {
    */
   //def index(folderId: Long, q: Option[String], done: Option[Boolean], sort: Option[String], p: Int, s: Int) = Action.async {
   def index() = Action.async {
-    Memos.content_s().get().map {
+    Memos.content_s().title_s().per(3).page(1).get().map {
       memos => Ok(views.html.memos.index(memos))
     }
   }
