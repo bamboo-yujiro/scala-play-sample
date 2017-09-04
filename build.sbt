@@ -11,5 +11,5 @@ libraryDependencies ++= Seq(
   ws,
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
   "mysql" % "mysql-connector-java" % "5.1.34",
-  "org.skinny-framework" %% "skinny-orm" % "2.3.2"
+  "org.skinny-framework" %% "skinny-orm" % "2.0.+"
 )

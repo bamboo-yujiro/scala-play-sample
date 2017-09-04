@@ -18,4 +18,6 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 GET /users/login  controllers.UsersController.login
 
+POST /users/result  controllers.UsersController.result
+
 GET /memos  controllers.MemosController.index
