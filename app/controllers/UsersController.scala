@@ -12,35 +12,34 @@ import play.api.data.validation.Constraints._
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import play.api.data.validation.{Constraint, Constraints, Invalid, Valid}
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 
-case class MyForm(custom:String)
+
 
 @Singleton
 class UsersController @Inject() extends Controller {
 
+  val userUnique: Constraint[String] = Constraint("constraints.userIsUnique")({
+    plainText =>
+      val user:Option[User] = User.where('username -> plainText).apply().headOption
+      user match {
+        case Some(u) => Invalid("User already exists.")
+        case None => Valid
+      }
+  })
+
   val loginForm = Form(
     mapping (
-      "username" -> tuple(
-        "a" -> nonEmptyText(minLength = 4),
-        "b" -> nonEmptyText(maxLength = 8)
-      ),
+      "username" -> nonEmptyText(minLength = 4).verifying(userUnique),
       "password" -> nonEmptyText(minLength = 8)
     )(RequestForm.apply)(RequestForm.unapply)
   )
 
-   /*
-   val form = Form(
-     mapping(
-       "username" -> nonEmptyText(minLength = 4),
-       "password" -> nonEmptyText(minLength = 8)
-     )(RequestForm.apply)(RequestForm.unapply)
-   )
-   */
   /**
    * Create an Action to render an HTML page with a welcome message.
    * The configuration in the `routes` file means that this method
@@ -54,18 +53,9 @@ class UsersController @Inject() extends Controller {
   def result() = Action { implicit request =>
     loginForm.bindFromRequest().fold(
       errorForm => {
-        println( errorForm.errors.collectFirst {
-          case v if (v.key == "username.a") => Messages(v.message, v.args)
-        }.getOrElse("") )
-        errorForm.errors.foreach{ v =>
-          println(v.message)
-          println(v.args)
-          //println(Messages(v.message, v.args))
-        }
         Ok(views.html.users.login(errorForm))
       },
       requestForm => {
-        println("OK")
         Ok(views.html.users.result(loginForm.fill(requestForm)))
       }
     )

@@ -1,7 +1,7 @@
 package forms
 
 case class RequestForm(
-  username: (String, String),
+  username: String,
   password: String
 )
 

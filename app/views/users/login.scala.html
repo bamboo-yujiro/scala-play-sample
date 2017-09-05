@@ -10,15 +10,22 @@
             <div>
                 @inputText(requestForm("username"), '_showConstraints -> false, '_showErrors -> false)
                 @if(requestForm.hasErrors) {
-                    @requestForm.errors.collectFirst {
-                        case v if (v.key == "username.a") => {
-                            @Messages(v.message, v.args)
-                        }
-                    }.getOrElse("")
+                    @for(v <- requestForm.errors.collect {
+                        case v if (v.key == "username") => Messages(v.message, v.args:_*)
+                    }){
+                        <div>@v</div>
+                    }
                 }
             </div>
             <div>
                 @inputPassword(requestForm("password"), '_showConstraints -> false, '_showErrors -> false)
+                @if(requestForm.hasErrors) {
+                    @for(v <- requestForm.errors.collect {
+                        case v if (v.key == "password") => Messages(v.message, v.args:_*)
+                    }){
+                        <div>@v</div>
+                    }
+                }
             </div>
             <div>
                 <input type="submit" value="ログイン" class="dimention-btn">
