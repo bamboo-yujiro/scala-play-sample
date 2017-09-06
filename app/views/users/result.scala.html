@@ -1,6 +1,6 @@
 @import helper._
 @import forms.RequestForm
-@(requestForm: Form[RequestForm])(implicit messages: Messages)
+@(requestForm: Form[(String,String)])(implicit messages: Messages)
 
 @layout("User login") {
     <div><a href="/">Topに戻る</a></div>

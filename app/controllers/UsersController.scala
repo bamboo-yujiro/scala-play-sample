@@ -33,12 +33,29 @@ class UsersController @Inject() extends Controller {
       }
   })
 
-  val loginForm = Form(
+  val createForm = Form(
     mapping (
       "username" -> nonEmptyText(minLength = 4).verifying(userUnique),
       "password" -> nonEmptyText(minLength = 8)
     )(RequestForm.apply)(RequestForm.unapply)
   )
+
+  val loginForm = Form(
+    tuple(
+      "username" -> text,
+      "password" -> text
+    ) verifying ("Invalid email or password", result => result match {
+      case (username, password) => check(username, password)
+    })
+  )
+
+  def check(username: String, password: String) = {
+    val user:Option[User] = User.where('username -> username).where('password -> password).apply().headOption
+    user match {
+      case Some(u) => true
+      case None => false
+    }
+  }
 
   /**
    * Create an Action to render an HTML page with a welcome message.

@@ -1,31 +1,19 @@
 @import helper._
-@import forms.RequestForm
-@(requestForm: Form[RequestForm])(implicit messages: Messages)
+@(requestForm: Form[(String,String)])(implicit messages: Messages)
 
 @layout("User login") {
     <div><a href="/">Topに戻る</a></div>
     <h1>ログイン</h1>
     <div class="form-wrapper">
+        @if(requestForm.hasErrors) {
+            <p>Error : ユーザー名かパスワードが間違っています</p>
+        }
         @form(action = routes.UsersController.result()) {
             <div>
                 @inputText(requestForm("username"), '_showConstraints -> false, '_showErrors -> false)
-                @if(requestForm.hasErrors) {
-                    @for(v <- requestForm.errors.collect {
-                        case v if (v.key == "username") => Messages(v.message, v.args:_*)
-                    }){
-                        <div>@v</div>
-                    }
-                }
             </div>
             <div>
                 @inputPassword(requestForm("password"), '_showConstraints -> false, '_showErrors -> false)
-                @if(requestForm.hasErrors) {
-                    @for(v <- requestForm.errors.collect {
-                        case v if (v.key == "password") => Messages(v.message, v.args:_*)
-                    }){
-                        <div>@v</div>
-                    }
-                }
             </div>
             <div>
                 <input type="submit" value="ログイン" class="dimention-btn">
