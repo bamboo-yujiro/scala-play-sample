@@ -18,6 +18,7 @@ trait AuthTrait {
 
   class AuthRequest[A](val currentUser: Option[User], request: Request[A]) extends WrappedRequest[A](request)
 
+  /* 使わないかも */
   def redirectToLogin = Action{
     //Redirect(controllers.routes.Secure.login())
     Redirect("/")
@@ -30,7 +31,7 @@ trait AuthTrait {
         case None => None
       }
       if (currentUser == None) {
-        redirectToLogin(request.asInstanceOf[Request[play.api.mvc.AnyContent]])
+        action(new AuthRequest(None, request))
       }else{
         action(new AuthRequest(currentUser, request))
       }

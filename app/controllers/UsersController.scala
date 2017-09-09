@@ -19,10 +19,10 @@ import play.api.data.validation.{Constraint, Constraints, Invalid, Valid}
  * application's home page.
  */
 
-
-
 @Singleton
 class UsersController @Inject() extends Controller {
+
+  private var _user:Option[User] = None
 
   val userUnique: Constraint[String] = Constraint("constraints.userIsUnique")({
     plainText =>
@@ -49,22 +49,39 @@ class UsersController @Inject() extends Controller {
     })
   )
 
-  def check(username: String, password: String) = {
+  def check(username: String, password: String):Boolean = {
     val user:Option[User] = User.where('username -> username).where('password -> password).apply().headOption
+    _user = user
     user match {
       case Some(u) => true
       case None => false
     }
   }
 
-  /**
-   * Create an Action to render an HTML page with a welcome message.
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
-   */
+
+  def _new = Action {
+    Ok(views.html.users._new(createForm))
+  }
+
+  def create() = Action { implicit request =>
+    createForm.bindFromRequest().fold(
+      errorForm => {
+        Ok(views.html.users._new(errorForm))
+      },
+      requestForm => {
+        User.createWithAttributes('username -> requestForm.username, 'password -> requestForm.password)
+        Redirect("/users/login")
+      }
+    )
+  }
+
+
   def login = Action {
     Ok(views.html.users.login(loginForm))
+  }
+
+  def logout = Action {
+    Redirect("/").withNewSession
   }
 
   def result() = Action { implicit request =>
@@ -73,7 +90,7 @@ class UsersController @Inject() extends Controller {
         Ok(views.html.users.login(errorForm))
       },
       requestForm => {
-        Ok(views.html.users.result(loginForm.fill(requestForm)))
+        Redirect("/memos").withSession("user_id" -> _user.get.id.toString)
       }
     )
   }

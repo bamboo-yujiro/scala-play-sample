@@ -2,7 +2,7 @@
  * This template takes a single argument, a String containing a
  * message to display.
  *@
-@(message: String)
+@(user: Option[User])
 
 @*
  * Call the `main` template with two arguments. The first
@@ -14,8 +14,16 @@
     @*
      * Get an `Html` object by calling the built-in Play welcome
      * template and passing a `String` message.
-     *@
+    *@
     <h1>あなたのメモ帳</h1>
-    <a href="/users/login" class="dimention-btn">ログイン</a>
-    <a href="/users/new" class="dimention-btn">会員登録</a>
+    @user.map{ u =>
+        <div>
+            <p>ようこそ @u.username</p>
+        </div>
+        <a href="/memos" class="dimention-btn">メモ帳を見る</a>
+        <a href="/users/logout" class="dimention-btn">ログアウト</a>
+    }.getOrElse {
+        <a href="/users/login" class="dimention-btn">ログイン</a>
+        <a href="/users/new" class="dimention-btn">会員登録</a>
+    }
 }

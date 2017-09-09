@@ -35,7 +35,7 @@ class MemosController @Inject() extends Controller with AuthTrait {
       val user = request.asInstanceOf[AuthRequest[AnyContent]].currentUser
       //println(user)
       //Ok(views.html.memos.index(memos)).withSession("user_id" -> "1")
-      Ok(views.html.memos.index(memos)).withNewSession
+      Ok(views.html.memos.index(memos, user))
     }
   }
 

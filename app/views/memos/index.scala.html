@@ -1,10 +1,10 @@
 
-@(memos: List[Memo])
+@(memos: List[Memo], user: Option[User])
 
 @layout("Memo index") {
 
     <div><a href="/">Topに戻る</a></div>
-    <h1>さんのメモ帳</h1>
+    <h1>@user.get.username さんのメモ帳</h1>
     <div class="mb20 mt10">
       <a href="/memos/new" class="dimention-btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>メモを書く</a>
     </div>
