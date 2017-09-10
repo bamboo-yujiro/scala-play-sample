@@ -1,5 +1,5 @@
 
-@(memos: List[Memo], user: Option[User])
+@(memos: List[Memo], user: Option[User], pagingMap: Map[String, Int])
 
 @layout("Memo index") {
 
@@ -21,6 +21,13 @@
     </div>
     }
     <div class="pager">
+    @for(i <- 1 to pagingMap.get("sumPageNum").get){
+        @if(i == pagingMap.get("page").get) {
+            <a href="javascript:void(0);" class="current"><span>@i</span></a>
+        }else{
+            <a href="/memos?page=@i" class=""><span>@i</span></a>
+        }
+    }
     </div>
     <script>
     $(function(){

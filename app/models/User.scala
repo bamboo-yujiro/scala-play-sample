@@ -9,13 +9,13 @@ import scalikejdbc.SQLInterpolation._
 import skinny.orm._
 import org.joda.time._
 
-case class User(id: Long, username: String, password: String, createdAt: DateTime)
+case class User(id: Int, username: String, password: String, createdAt: DateTime)
 
 object User extends SkinnyCRUDMapper[User] { self =>
   override def defaultAlias = createAlias("u")
   override def tableName = "users"
   override def extract(rs: WrappedResultSet, n: ResultName[User]) = new User(
-    id = rs.long(n.id),
+    id = rs.int(n.id),
     username = rs.string(n.username),
     password = rs.string(n.password),
     createdAt = rs.jodaDateTime(n.createdAt)

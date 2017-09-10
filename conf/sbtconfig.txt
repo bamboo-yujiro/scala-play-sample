@@ -1,0 +1,2 @@
+-Dactivator.checkForUpdates=false
+-Dactivator.checkForTemplateUpdates=false

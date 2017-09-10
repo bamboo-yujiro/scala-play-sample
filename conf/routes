@@ -26,3 +26,7 @@ GET /users/logout  controllers.UsersController.logout
 POST /users/result  controllers.UsersController.result
 
 GET /memos  controllers.MemosController.index
+
+GET /memos/new  controllers.MemosController._new
+
+POST /memos/create  controllers.MemosController.create

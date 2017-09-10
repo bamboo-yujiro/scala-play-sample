@@ -14,6 +14,9 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.data.validation.{Constraint, Constraints, Invalid, Valid}
 
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
+
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
@@ -58,7 +61,6 @@ class UsersController @Inject() extends Controller {
     }
   }
 
-
   def _new = Action {
     Ok(views.html.users._new(createForm))
   }
@@ -74,7 +76,6 @@ class UsersController @Inject() extends Controller {
       }
     )
   }
-
 
   def login = Action {
     Ok(views.html.users.login(loginForm))
@@ -94,6 +95,5 @@ class UsersController @Inject() extends Controller {
       }
     )
   }
-
 
 }
