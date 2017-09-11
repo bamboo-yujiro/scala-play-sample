@@ -65,10 +65,39 @@ class MemosController @Inject() extends Controller with AuthTrait {
         },
         requestForm => {
           val user = request.asInstanceOf[AuthRequest[AnyContent]].currentUser
-          Memo.createWithAttributes('title -> requestForm.title, 'content -> requestForm.content, 'user_id -> user.get.id)
-          Redirect("/memos")
+          val id = Memo.createWithAttributes('title -> requestForm.title, 'content -> requestForm.content, 'user_id -> user.get.id)
+          Redirect("/memos/" + id.toString() + "/show")
         }
       )
+    }
+  }
+
+  def edit(id: Int) = Auth {
+    Action {
+      val memo = Memo.where('id -> id).apply().headOption.get
+      val editForm:Form[MemoForm] = createForm.bind(Map("title" -> memo.title, "content" -> memo.content))
+      Ok(views.html.memos.edit(editForm,id))
+    }
+  }
+
+  def update(id: Int) = Auth {
+    Action { implicit request =>
+      createForm.bindFromRequest().fold(
+        errorForm => {
+          Ok(views.html.memos.edit(errorForm,id))
+        },
+        requestForm => {
+          Memo.updateById(id).withAttributes('title -> requestForm.title, 'content -> requestForm.content)
+          Redirect("/memos/" + id.toString() + "/show")
+        }
+      )
+    }
+  }
+
+  def show(id: Int) = Auth {
+    Action { implicit request =>
+      val memo = Memo.where('id -> id).apply().headOption.get
+      Ok(views.html.memos.show(memo))
     }
   }
 

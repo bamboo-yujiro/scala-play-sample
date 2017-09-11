@@ -30,3 +30,9 @@ GET /memos  controllers.MemosController.index
 GET /memos/new  controllers.MemosController._new
 
 POST /memos/create  controllers.MemosController.create
+
+GET /memos/:id/edit  controllers.MemosController.edit(id: Int)
+
+POST /memos/:id/update  controllers.MemosController.update(id: Int)
+
+GET /memos/:id/show  controllers.MemosController.show(id: Int)

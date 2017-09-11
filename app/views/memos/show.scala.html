@@ -1,0 +1,16 @@
+@(memo: Memo)
+
+@layout("Show Memo") {
+    <h1>メモ詳細</h1>
+    <form class="form-wrapper mb20">
+        <label>タイトル</label>
+        <div>
+            <input readonly type="text" value="@memo.title">
+        </div>
+        <label>内容</label>
+        <div>
+            <textarea readonly>@memo.content</textarea>
+        </div>
+    </form>
+    <a href="/memos/@memo.id/edit">>>このメモを編集する</a>
+}

@@ -1,0 +1,34 @@
+@import helper._
+@import forms.MemoForm
+@(requestForm: Form[MemoForm], memoId: Int)(implicit messages: Messages)
+
+@layout("Edit Memo") {
+    <h1>メモ編集</h1>
+    @form(action = routes.MemosController.update(memoId), 'class -> "form-wrapper") {
+        <div>
+            @inputText(requestForm("title"), '_showConstraints -> false, '_showErrors -> false)
+            @if(requestForm.hasErrors) {
+                @for(v <- requestForm.errors.collect {
+                    case v if (v.key == "title") => Messages(v.message, v.args:_*)
+                }){
+                    <div>@v</div>
+                }
+            }
+        </div>
+        <div>
+            @textarea(requestForm("content"), '_showConstraints -> false, '_showErrors -> false)
+            @if(requestForm.hasErrors) {
+                @for(v <- requestForm.errors.collect {
+                    case v if (v.key == "content") => Messages(v.message, v.args:_*)
+                }){
+                    <div>@v</div>
+                }
+            }
+        </div>
+        <div>
+            <input type="submit" value="編集" class="dimention-btn">
+        </div>
+    }
+}
+
+
