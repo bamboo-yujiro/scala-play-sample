@@ -1,8 +1,12 @@
 @import helper._
-@(requestForm: Form[(String,String)])(implicit messages: Messages)
+@(requestForm: Form[(String,String)])(implicit messages: Messages, request: RequestHeader)
+@implicitFieldConstructor = @{ FieldConstructor(common.f) }
 
 @layout("User login") {
     <div><a href="/">Topに戻る</a></div>
+    @request.flash.get("success").map{ msg =>
+        <div class="">@msg</div>
+    }
     <h1>ログイン</h1>
     <div class="form-wrapper">
         @if(requestForm.hasErrors) {
@@ -10,9 +14,11 @@
         }
         @form(action = routes.UsersController.result()) {
             <div>
+                <label for="">ユーザー名</label>
                 @inputText(requestForm("username"), '_showConstraints -> false, '_showErrors -> false)
             </div>
             <div>
+                <label for="">パスワード</label>
                 @inputPassword(requestForm("password"), '_showConstraints -> false, '_showErrors -> false)
             </div>
             <div>

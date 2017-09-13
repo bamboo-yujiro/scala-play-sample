@@ -1,6 +1,7 @@
 @import helper._
 @import forms.RequestForm
 @(requestForm: Form[RequestForm])(implicit messages: Messages)
+@implicitFieldConstructor = @{ FieldConstructor(common.f) }
 
 @layout("User login") {
     <div><a href="/">Topに戻る</a></div>

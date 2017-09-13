@@ -1,11 +1,14 @@
 @import helper._
 @import forms.MemoForm
 @(requestForm: Form[MemoForm])(implicit messages: Messages)
+@implicitFieldConstructor = @{ FieldConstructor(common.f) }
 
 @layout("New Memo") {
+    @memos.elements.back_to_list()
     <h1>新規メモ追加</h1>
     @form(action = routes.MemosController.create(), 'class -> "form-wrapper") {
         <div>
+            <label for="">タイトル</label>
             @inputText(requestForm("title"), '_showConstraints -> false, '_showErrors -> false)
             @if(requestForm.hasErrors) {
                 @for(v <- requestForm.errors.collect {
@@ -16,6 +19,7 @@
             }
         </div>
         <div>
+            <label for="">内容</label>
             @textarea(requestForm("content"), '_showConstraints -> false, '_showErrors -> false)
             @if(requestForm.hasErrors) {
                 @for(v <- requestForm.errors.collect {

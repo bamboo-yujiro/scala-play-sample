@@ -66,7 +66,7 @@ class MemosController @Inject() extends Controller with AuthTrait {
         requestForm => {
           val user = request.asInstanceOf[AuthRequest[AnyContent]].currentUser
           val id = Memo.createWithAttributes('title -> requestForm.title, 'content -> requestForm.content, 'user_id -> user.get.id)
-          Redirect("/memos/" + id.toString() + "/show")
+          Redirect("/memos/" + id.toString() + "/show").flashing("success" -> Messages("メモを追加しました。"))
         }
       )
     }
@@ -88,7 +88,7 @@ class MemosController @Inject() extends Controller with AuthTrait {
         },
         requestForm => {
           Memo.updateById(id).withAttributes('title -> requestForm.title, 'content -> requestForm.content)
-          Redirect("/memos/" + id.toString() + "/show")
+          Redirect("/memos/" + id.toString() + "/show").flashing("success" -> Messages("メモを編集しました。"))
         }
       )
     }
@@ -98,6 +98,13 @@ class MemosController @Inject() extends Controller with AuthTrait {
     Action { implicit request =>
       val memo = Memo.where('id -> id).apply().headOption.get
       Ok(views.html.memos.show(memo))
+    }
+  }
+
+  def destroy(id: Int) = Auth {
+    Action {
+      Memo.deleteById(id)
+      Redirect("/memos").flashing("success" -> Messages("メモを削除しました。"))
     }
   }
 

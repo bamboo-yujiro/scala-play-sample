@@ -14,6 +14,7 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.data.validation.{Constraint, Constraints, Invalid, Valid}
 
+import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 
@@ -72,17 +73,17 @@ class UsersController @Inject() extends Controller {
       },
       requestForm => {
         User.createWithAttributes('username -> requestForm.username, 'password -> requestForm.password)
-        Redirect("/users/login")
+        Redirect("/users/login").flashing("success" -> Messages("ユーザーを作成しました。"))
       }
     )
   }
 
-  def login = Action {
+  def login = Action { implicit request =>
     Ok(views.html.users.login(loginForm))
   }
 
   def logout = Action {
-    Redirect("/").withNewSession
+    Redirect("/").withNewSession.flashing("success" -> Messages("ログアウトしました。"))
   }
 
   def result() = Action { implicit request =>

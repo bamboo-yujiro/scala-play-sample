@@ -36,3 +36,5 @@ GET /memos/:id/edit  controllers.MemosController.edit(id: Int)
 POST /memos/:id/update  controllers.MemosController.update(id: Int)
 
 GET /memos/:id/show  controllers.MemosController.show(id: Int)
+
+POST /memos/:id/destroy  controllers.MemosController.destroy(id: Int)

@@ -1,6 +1,10 @@
-@(memo: Memo)
+@(memo: Memo)(implicit request: RequestHeader)
 
 @layout("Show Memo") {
+    @memos.elements.back_to_list()
+    @request.flash.get("success").map{ msg =>
+        <div class="">@msg</div>
+    }
     <h1>メモ詳細</h1>
     <form class="form-wrapper mb20">
         <label>タイトル</label>
