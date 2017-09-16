@@ -18,13 +18,14 @@ import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 
+import controllers.components.actions.AuthTrait
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 
 @Singleton
-class UsersController @Inject() extends Controller {
+class UsersController @Inject() extends Controller with AuthTrait {
 
   private var _user:Option[User] = None
 
@@ -82,8 +83,10 @@ class UsersController @Inject() extends Controller {
     Ok(views.html.users.login(loginForm))
   }
 
-  def logout = Action {
-    Redirect("/").withNewSession.flashing("success" -> Messages("ログアウトしました。"))
+  def logout = Auth {
+    Action {
+      Redirect("/").withNewSession.flashing("success" -> Messages("ログアウトしました。"))
+    }
   }
 
   def result() = Action { implicit request =>

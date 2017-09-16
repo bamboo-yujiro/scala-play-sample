@@ -19,11 +19,11 @@ class MainController @Inject() extends Controller with AuthTrait {
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index = Auth {
+  def index = Auth ({
     Action { implicit request =>
       val user = request.asInstanceOf[AuthRequest[AnyContent]].currentUser
       Ok(views.html._main.index(user))
     }
-  }
+  }, false)
 
 }
