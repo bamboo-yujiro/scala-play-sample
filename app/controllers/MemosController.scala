@@ -3,9 +3,9 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
+
 import models._
-import scala.concurrent.ExecutionContext.Implicits.global
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
 import controllers.components.actions.AuthTrait
 
 import forms.MemoForm
@@ -17,16 +17,13 @@ import scalikejdbc._
 import skinny._
 import skinny.orm._, feature._
 
-import play.api.Play.current
+import play.api.i18n.I18nSupport
+import play.api.i18n.MessagesApi
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
 @Singleton
-class MemosController @Inject() extends Controller with AuthTrait {
+class MemosController @Inject()(val messagesApi: MessagesApi) extends Controller with AuthTrait with I18nSupport {
 
   val createForm = Form(
     mapping (

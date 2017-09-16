@@ -3,29 +3,23 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
+
 import models.User
 
 import forms.RequestForm
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.Constraints._
-import play.api.Play.current
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.data.validation.{Constraint, Constraints, Invalid, Valid}
 
-import play.api.Play.current
+import controllers.components.actions.AuthTrait
+
+import play.api.i18n.I18nSupport
+import play.api.i18n.MessagesApi
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 
-import controllers.components.actions.AuthTrait
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
-
 @Singleton
-class UsersController @Inject() extends Controller with AuthTrait {
+class UsersController @Inject() (val messagesApi: MessagesApi) extends Controller with AuthTrait with I18nSupport {
 
   private var _user:Option[User] = None
 
