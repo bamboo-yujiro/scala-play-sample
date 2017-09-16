@@ -9,6 +9,7 @@
     <div class="form-wrapper">
         @form(action = routes.UsersController.create()) {
             <div>
+                <label for="">ユーザー名</label>
                 @inputText(requestForm("username"), '_showConstraints -> false, '_showErrors -> false)
                 @if(requestForm.hasErrors) {
                     @for(v <- requestForm.errors.collect {
@@ -19,6 +20,7 @@
                 }
             </div>
             <div>
+                <label for="">パスワード</label>
                 @inputPassword(requestForm("password"), '_showConstraints -> false, '_showErrors -> false)
                 @if(requestForm.hasErrors) {
                     @for(v <- requestForm.errors.collect {

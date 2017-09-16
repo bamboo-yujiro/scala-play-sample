@@ -30,7 +30,8 @@
             }
         </div>
         <div>
-            @inputText(requestForm("tag_str"), '_showConstraints -> false, '_showErrors -> false)
+            <label for="">タグ</label>
+            @inputText(requestForm("tag_str"), '_showConstraints -> false, '_showErrors -> false, 'placeholder -> "カンマ区切りで入力")
         </div>
         <div>
             <input type="submit" value="編集" class="dimention-btn">
