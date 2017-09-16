@@ -33,7 +33,8 @@ class MemosController @Inject() extends Controller with AuthTrait {
   val createForm = Form(
     mapping (
       "title" -> nonEmptyText,
-      "content" -> nonEmptyText
+      "content" -> nonEmptyText,
+      "tag_str" -> nonEmptyText
     )(MemoForm.apply)(MemoForm.unapply)
   )
 
@@ -66,6 +67,7 @@ class MemosController @Inject() extends Controller with AuthTrait {
         requestForm => {
           val user = request.asInstanceOf[AuthRequest[AnyContent]].currentUser
           val id = Memo.createWithAttributes('title -> requestForm.title, 'content -> requestForm.content, 'user_id -> user.get.id)
+          Memo.tagUpdate(id.toInt,requestForm.tag_str)
           Redirect("/memos/" + id.toString() + "/show").flashing("success" -> Messages("メモを追加しました。"))
         }
       )
@@ -74,8 +76,8 @@ class MemosController @Inject() extends Controller with AuthTrait {
 
   def edit(id: Int) = Auth {
     Action {
-      val memo = Memo.where('id -> id).apply().headOption.get
-      val editForm:Form[MemoForm] = createForm.bind(Map("title" -> memo.title, "content" -> memo.content))
+      val memo = Memo.joins(Memo.tagsRef).where('id -> id).apply().headOption.get
+      val editForm:Form[MemoForm] = createForm.bind(Map("title" -> memo.title, "content" -> memo.content, "tag_str" -> memo.tagStr))
       Ok(views.html.memos.edit(editForm,id))
     }
   }
@@ -88,6 +90,7 @@ class MemosController @Inject() extends Controller with AuthTrait {
         },
         requestForm => {
           Memo.updateById(id).withAttributes('title -> requestForm.title, 'content -> requestForm.content)
+          Memo.tagUpdate(id.toInt,requestForm.tag_str)
           Redirect("/memos/" + id.toString() + "/show").flashing("success" -> Messages("メモを編集しました。"))
         }
       )
@@ -96,7 +99,7 @@ class MemosController @Inject() extends Controller with AuthTrait {
 
   def show(id: Int) = Auth {
     Action { implicit request =>
-      val memo = Memo.where('id -> id).apply().headOption.get
+      val memo = Memo.joins(Memo.tagsRef).where('id -> id).apply().headOption.get
       Ok(views.html.memos.show(memo))
     }
   }

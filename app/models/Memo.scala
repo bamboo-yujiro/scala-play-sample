@@ -6,6 +6,9 @@ import skinny.orm._, feature._
 import org.joda.time.DateTime
 import scala.math.ceil
 
+import models.MemoTag
+import models.Tag
+
 case class Memo(
   id: Int,
   title: String,
@@ -14,26 +17,50 @@ case class Memo(
   updatedAt: DateTime,
   userId: Int,
   user: Option[User] = None,
-  hogeVal: String
-)
+  memo_tags: Seq[MemoTag] = Nil,
+  tags: Seq[Tag] = Nil
+) {
+
+  def tagStr:String = {
+    tags.map(v =>
+      v.name
+    ).mkString(",")
+  }
+
+  def hogeVal: String = {
+    createdAt.toString("yyyy/MM/dd HH:mm:ss")
+  }
+
+}
 
 object Memo extends SkinnyCRUDMapper[Memo] with TimestampsFeature[Memo] { self =>
   override def defaultAlias = createAlias("m")
   override def tableName = "memos"
   override def extract(rs: WrappedResultSet, n: ResultName[Memo]) = {
-    def hoge: String = {
-      rs.jodaDateTime(n.createdAt).toString("yyyy/MM/dd HH:mm:ss")
-    }
     new Memo(
       id = rs.int(n.id),
       title = rs.string(n.title),
       content = rs.string(n.content),
       createdAt = rs.jodaDateTime(n.createdAt),
       updatedAt = rs.jodaDateTime(n.updatedAt),
-      userId = rs.int(n.userId),
-      hogeVal = hoge
+      userId = rs.int(n.userId)
     )
   }
+
+  lazy val memoTagsRef = hasMany[MemoTag](
+    // association's SkinnyMapper and alias
+    many = MemoTag -> MemoTag.defaultAlias,
+    // defines join condition by using aliases
+    on = (m, mt) => sqls.eq(m.id, mt.memoId),
+    // function to merge associations to main entity
+    merge = (memo, memo_tags) => memo.copy(memo_tags = memo_tags)
+  )
+
+  lazy val tagsRef = hasManyThrough[Tag](
+    through = MemoTag,
+    many = Tag,
+    merge = (memo, tags) => memo.copy(tags = tags)
+  )
 
   val perPageNum = 5
 
@@ -52,6 +79,15 @@ object Memo extends SkinnyCRUDMapper[Memo] with TimestampsFeature[Memo] { self =
         "sumPageNum" -> sumPageNum
       )
     )
+  }
+
+  def tagUpdate(id:Int, tagStr:String):Unit = {
+    MemoTag.deleteBy(sqls.eq(MemoTag.column.memoId, id))
+    tagStr.split(',').foreach({v =>
+      var tag = Tag.where('name -> v).apply().headOption
+      val tagId = if(tag == None){ Tag.createWithAttributes('name -> v) }else{ tag.get.id }
+      MemoTag.createWithAttributes('memo_id -> id, 'tag_id -> tagId)
+    })
   }
 
 }
