@@ -44,11 +44,11 @@ class UsersController @Inject() (val messagesApi: MessagesApi) extends Controlle
       "username" -> text,
       "password" -> text
     ) verifying ("Invalid email or password", result => result match {
-      case (username, password) => check(username, password)
+      case (username, password) => checkIdPassword(username, password)
     })
   )
 
-  def check(username: String, password: String):Boolean = {
+  def checkIdPassword(username: String, password: String):Boolean = {
     val user:Option[User] = User.where('username -> username).where('password -> password).apply().headOption
     _user = user
     user match {

@@ -17,7 +17,7 @@ import play.api.i18n.Messages.Implicits._
 
 
 /**
- * Created by yusuke on 2015/01/23. http://play-gf.blogspot.jp/2015/03/filter.html
+ * 参考 : http://play-gf.blogspot.jp/2015/03/filter.html
  */
 trait AuthTrait extends Controller with I18nSupport {
 
