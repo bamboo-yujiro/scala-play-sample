@@ -6,7 +6,7 @@ import play.api.mvc._
 
 import models.User
 
-import forms.RequestForm
+import forms.UserForm
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Constraints, Invalid, Valid}
@@ -36,7 +36,7 @@ class UsersController @Inject() (val messagesApi: MessagesApi) extends Controlle
     mapping (
       "username" -> nonEmptyText(minLength = 4).verifying(userUnique),
       "password" -> nonEmptyText(minLength = 8)
-    )(RequestForm.apply)(RequestForm.unapply)
+    )(UserForm.apply)(UserForm.unapply)
   )
 
   val loginForm = Form(
