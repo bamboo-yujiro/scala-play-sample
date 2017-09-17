@@ -27,7 +27,7 @@ case class Memo(
     ).mkString(",")
   }
 
-  def hogeVal: String = {
+  def postDate: String = {
     createdAt.toString("yyyy/MM/dd HH:mm:ss")
   }
 
